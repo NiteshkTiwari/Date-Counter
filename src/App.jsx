@@ -1,27 +1,42 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 function App() {
-  const [step, setStep] = useState(0);
-  const [date ,setDate]=useState(0);
-  const day =new Date();
-  day.setDate(day.getDate()+date);
- 
+  const [step, setStep] = useState(1);
+  const [date, setDate] = useState(0);
+  const day = new Date();
+  day.setDate(day.getDate() + date);
+
+  function handleReset() {
+    setStep(0);
+    setDate(0);
+  }
+
   return (
     <>
       <div>
-      <button onClick={() => setStep((s) => s - 1)}>-</button>
-      <span> Steps {step}</span>
-      <button onClick={() => setStep((s) => s + 1)}>+</button>
+        <input
+          type="range"
+          min="0"
+          max="100"
+          value={step}
+          onChange={(e) => setStep(Number(e.target.value))}
+        />
       </div>
 
       <div>
-        <button onClick={()=>setDate((d)=> d-step)}>-</button>
-        <span>Date {date}</span>
-        <button onClick={()=>setDate((d)=>step+d)}>+</button>
+        <button onClick={() => setDate((d) => d - step)}>-</button>
+        <input
+          type="text"
+          value={date}
+          onChange={(e) => setDate(Number(e.target.value))}
+        />
+        <button onClick={() => setDate((d) => step + d)}>+</button>
       </div>
 
       <div> Current date : {day.toDateString()}</div>
-      
+      {date !== 0 || step !== 1 ? (
+        <button onClick={handleReset}>Reset</button>
+      ) : null}
     </>
   );
 }
