@@ -1,42 +1,60 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 function App() {
   const [step, setStep] = useState(1);
   const [date, setDate] = useState(0);
-  const day = new Date();
-  day.setDate(day.getDate() + date);
+
+  const day = useMemo(() => {
+    const newDay = new Date();
+    newDay.setDate(newDay.getDate() + date);
+    return newDay;
+  }, [date]);
 
   function handleReset() {
-    setStep(0);
+    setStep(1);
     setDate(0);
   }
 
   return (
     <>
       <div>
+        <label htmlFor="stepRange">Step: {step}</label>
         <input
+          id="stepRange"
           type="range"
-          min="0"
+          min="1"
           max="100"
           value={step}
           onChange={(e) => setStep(Number(e.target.value))}
+          aria-label="Adjust step range"
         />
       </div>
 
       <div>
-        <button onClick={() => setDate((d) => d - step)}>-</button>
+        <button
+          onClick={() => setDate((d) => d - step)}
+          aria-label="Decrease date"
+        >
+          -
+        </button>
         <input
           type="text"
           value={date}
           onChange={(e) => setDate(Number(e.target.value))}
+          aria-label="Set date offset"
         />
-        <button onClick={() => setDate((d) => step + d)}>+</button>
+        <button
+          onClick={() => setDate((d) => step + d)}
+          aria-label="Increase date"
+        >
+          +
+        </button>
       </div>
 
-      <div> Current date : {day.toDateString()}</div>
-      {date !== 0 || step !== 1 ? (
-        <button onClick={handleReset}>Reset</button>
-      ) : null}
+      <div className="current-date">Current date: {day.toDateString()}</div>
+      <button onClick={handleReset} disabled={date === 0 && step === 1}>
+        Reset
+      </button>
     </>
   );
 }
